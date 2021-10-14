@@ -160,7 +160,6 @@ exports.updateEmployeeInformation = async(req, res) => {
             
             let names = (req.body.Names) ? req.body.Names : employeeInfo.Names
             let dob = (req.body.DateOfBirth) ? req.body.DateOfBirth : employeeInfo.DateOfBirth
-
             if(req.body.DateOfBirth){
                 let date = new Date(req.body.DateOfBirth).getFullYear()
                 let today = new Date()
