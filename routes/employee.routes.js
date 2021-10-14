@@ -3,8 +3,6 @@ const router = express.Router()
 const {getEmployees, validateEmployeeByEmail, registerEmployee,updateEmployeeInformation, deleteEmployee, suspendEmployee, activateEmployee, searchEmployee} = require("../controllers/employee.controller")
 const authenticate = require('../middlewares/auth.middleware')
 const manager = require('../middlewares/manager.middleware')
-const { uploadFile } = require("../utils/fileUpload.utils")
-const upload = uploadFile("profileUploads")
 
 /**
  * @swagger

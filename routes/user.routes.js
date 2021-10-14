@@ -2,8 +2,6 @@ const express = require("express")
 const router = express.Router()
 const {getUserInformation, validateUserByEmail, createUser, login,sendResetLink,updateUserInformation, resetPassword,changePassword, deleteAccount} = require("../controllers/user.controller")
 const authenticate = require('../middlewares/auth.middleware')
-const { uploadFile } = require("../utils/fileUpload.utils")
-const upload = uploadFile("profileUploads")
 
 /**
  * @swagger
