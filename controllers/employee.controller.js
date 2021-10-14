@@ -160,7 +160,8 @@ exports.updateEmployeeInformation = async(req, res) => {
             if(req.body.DateOfBirth){
                 let date = new Date(req.body.DateOfBirth).getFullYear()
                 console.log(date)
-                if(new Date().getFullYear - date < 18){
+                let today = new Date()
+                if(today.getFullYear() - date < 18){
                     return res.status(400).send("You are not eligible to update the employee information because the provided age is less than 18 years")
                 }
             }
