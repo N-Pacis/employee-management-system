@@ -41,9 +41,12 @@ exports.createUser = async(req, res) => {
             return res.status(400).send("Phone Number must be a valid Rwandan Phone Number!")
         }
 
-        let date = new Date(req.body.DateOfBirth).getFullYear()
-        if(new Date().getFullYear - date < 18){
-           return res.status(400).send("You are not eligible to register because you are younger than 18 years")
+        if(req.body.DateOfBirth){
+            let date = new Date(req.body.DateOfBirth).getFullYear()
+            let today = new Date()
+            if((today.getFullYear() - date) < 18){
+                return res.status(400).send("You are not eligible to register because the provided age is less than 18 years")
+            }
         }
 
         let user = new User(_.pick(req.body, ['Name','NationalId','Phone','DateOfBirth','Email','Password']))
@@ -192,11 +195,12 @@ exports.updateUserInformation = async(req, res) => {
             
             if(req.body.DateOfBirth){
                 let date = new Date(req.body.DateOfBirth).getFullYear()
-                if(new Date().getFullYear - date < 18){
-                    return res.status(400).send("You are not eligible to update your profile information because the provided age is less than 18 years")
+                let today = new Date()
+                if((today.getFullYear() - date) < 18){
+                    return res.status(400).send("You are not eligible to update the profile information because the provided age is less than 18 years")
                 }
             }
-            
+
             let user = await User.findByIdAndUpdate(req.user._id, {
                 Name: names,
                 DateOfBirth: dob

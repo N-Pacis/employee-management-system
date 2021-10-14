@@ -93,9 +93,12 @@ exports.registerEmployee = async(req, res) => {
             return res.status(400).send("Phone Number must be a valid Rwandan Phone Number!")
         }
         
-        let date = new Date(req.body.DateOfBirth).getFullYear()
-        if(new Date().getFullYear - date < 18){
-           return res.status(400).send("You are not eligible to register because you are younger than 18 years")
+        if(req.body.DateOfBirth){
+            let date = new Date(req.body.DateOfBirth).getFullYear()
+            let today = new Date()
+            if((today.getFullYear() - date) < 18){
+                return res.status(400).send("You are not eligible to register the employee because the provided age is less than 18 years")
+            }
         }
 
         let employee = new Employee(_.pick(req.body, ['Name','NationalId','Phone','DateOfBirth','Email','Position']))
@@ -160,11 +163,12 @@ exports.updateEmployeeInformation = async(req, res) => {
 
             if(req.body.DateOfBirth){
                 let date = new Date(req.body.DateOfBirth).getFullYear()
-                if(new Date().getFullYear - date < 18){
+                let today = new Date()
+                if((today.getFullYear() - date) < 18){
                     return res.status(400).send("You are not eligible to update the employee information because the provided age is less than 18 years")
                 }
             }
-            
+
             let employee = await Employee.findByIdAndUpdate(req.params.employeeId, {
                 Name: names,
                 DateOfBirth: dob
