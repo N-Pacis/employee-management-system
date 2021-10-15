@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 const { sendEmail } = require("../utils/emailConfig.utils");
 const { validateManager } = require("../validators/manager.validator");
+const { log } = require("../utils/log.utils");
 
 exports.getUserInformation = async(req, res) => {
     try {
@@ -92,6 +93,7 @@ exports.login = async(req, res) => {
         }
 
         const token =user.generateAuthToken()
+        await log('login',{managerId: user._id,managerCode: user.Code,managerNames: user.Name},user._id)
         res.header('Authorization', token).send({
             status: 200,
             message: "Login Successful",
@@ -150,6 +152,11 @@ exports.resetPassword = async(req, res) => {
         let newPassword = await bcrypt.hash(req.body.newPassword, salt)
 
         await User.findByIdAndUpdate(req.params.userId, { Password: newPassword }, { new: true })
+        await log(
+            'password-reset',
+            {},
+            req.params.userId
+        ) 
         res.status(200).send("Reset Password Successfully!You can now login with your new password")
     } catch (ex) {
         res.status(400).send(ex.message)
@@ -173,13 +180,19 @@ exports.updateUserInformation = async(req, res) => {
                 if((today.getFullYear() - date) < 18){
                     return res.status(400).send("You are not eligible to update the profile information because the provided age is less than 18 years")
                 }
-            }
-
+            } 
             let user = await User.findByIdAndUpdate(req.user._id, {
                 Name: names,
                 DateOfBirth: dob
             }, { new: true })
-                
+            await log(
+                'profile-update',
+                {
+                    BeforeUpdate:userInfo,
+                    AfterUpdate:user
+                },
+                req.user._id
+            )    
             res.status(200).send({
                 message: 'User updated successfully',
                 data: user
@@ -204,7 +217,13 @@ exports.changePassword = async(req,res)=>{
         let newPassword = await bcrypt.hash(req.body.newPassword,newPasswordSalt)
 
         await User.findByIdAndUpdate(req.user._id,{Password:newPassword},{new:true})
+        await log(
+            'password-change',
+            {},
+            req.user._id
+        ) 
         res.status(200).send("Password Updated Successfully! Next time Log in with your new Password");
+
     }
     catch(ex){
         res.status(400).send(ex.message)
@@ -213,6 +232,15 @@ exports.changePassword = async(req,res)=>{
 
 exports.deleteAccount= async(req, res) => {
     try {
+        let user = await User.findById(req.user._id)
+        if(!user) return res.status(404).send("The manager does not exist")
+        await log(
+            'profile-deletion',
+            {
+                managerInfo: user
+            },
+            req.user._id
+        ) 
         await User.findByIdAndRemove(req.user._id)
         res.status(200).send("User deleted successfully")
     } catch (ex) {

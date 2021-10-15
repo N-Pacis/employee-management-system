@@ -39,7 +39,7 @@ function validatePasswordReset(user){
 function validateUserUpdate(user){
     const schema = Joi.object({
         Names: Joi.string().min(5),
-        DateOfBirth: Joi.date().required()
+        DateOfBirth: Joi.date()
     })
     return schema.validate(user)
 }
