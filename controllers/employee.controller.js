@@ -3,7 +3,6 @@ const _ = require("lodash")
 const jwt = require('jsonwebtoken')
 const { sendEmail } = require("../utils/emailConfig.utils");
 const readExcelFile = require('read-excel-file/node')
-const cloudinary = require("../utils/cloudinary");
 const {validateEmployeeRegistrationByFileUpload} = require('../validators/employee.validator');
 
 exports.getAnEmployee = async(req, res) => {
