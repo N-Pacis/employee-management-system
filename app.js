@@ -19,6 +19,7 @@ app.use(express.static("ExcelSheets"))
 app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
 app.use(require("./routes/user.routes"))
 app.use(require("./routes/employee.routes"))
+app.use(require("./routes/system.routes"))
 
 app.listen(process.env.PORT || PORT ,()=>{
     console.log(`Server is listening on port ${PORT}`);
