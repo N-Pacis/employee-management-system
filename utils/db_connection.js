@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
-if(process.env.NODE_ENV == 'production'){
-    var database_url = process.env.DATABASE_ATLAS
-}
-else if(process.env.NODE_ENV == 'development'){
-    var database_url = process.env.DATABASE_LOCAL
-}
-mongoose.connect(database_url,{
+mongoose.connect(process.env.DATABASE_ATLAS,{
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

@@ -1,7 +1,10 @@
-const { validateRegistration,validateUpdate, Employee} = require("../models/employee.model")
+const { validateUpdate, Employee} = require("../models/employee.model")
 const _ = require("lodash")
 const jwt = require('jsonwebtoken')
 const { sendEmail } = require("../utils/emailConfig.utils");
+const readExcelFile = require('read-excel-file/node')
+const cloudinary = require("../utils/cloudinary");
+const {validateEmployeeRegistrationByFileUpload} = require('../validators/employee.validator');
 
 exports.getAnEmployee = async(req, res) => {
     try {
@@ -70,43 +73,13 @@ exports.getEmployees = async(req, res) => {
 
 exports.registerEmployee = async(req, res) => {
     try {
-        const { error } = validateRegistration(req.body)
-        if (error) return res.status(400).send(error.details[0].message)
-
-        let randomCode = Math.floor(1000 + Math.random() * 9000);
-
-        let checkEmail = await Employee.findOne({ Email: req.body.Email })
-        if (checkEmail) return res.status(400).send("Email is already registered!")
-
-        let checkNationalID = await Employee.findOne({ NationalId: req.body.NationalId })
-        if (checkNationalID) return res.status(400).send("National Id is already registered!")
-
-        if((req.body.NationalId).length < 16 || (req.body.NationalId).length > 16) return res.status(400).send("National ID must be 16 characters!")
-
-        let checkPhone = await Employee.findOne({ Phone: req.body.Phone })
-        if (checkPhone) return res.status(400).send("Phone Number is already registered!")
-        if((req.body.Phone).length < 10 || (req.body.Phone).length > 10) return res.status(400).send("Phone Number must be 10 characters!")
-        req.body.Phone = (req.body.Phone).toString()
-        let validRwandanPhoneNumbers = ['078','079','072','073']
-        let first3Characters = (req.body.Phone.toString()).substring(0,3)
-        if(validRwandanPhoneNumbers.includes(first3Characters) != true){
-            return res.status(400).send("Phone Number must be a valid Rwandan Phone Number!")
-        }
-        
-        if(req.body.DateOfBirth){
-            let date = new Date(req.body.DateOfBirth).getFullYear()
-            let today = new Date()
-            if((today.getFullYear() - date) < 18){
-                return res.status(400).send("You are not eligible to register the employee because the provided age is less than 18 years")
-            }
-        }
 
         let employee = new Employee(_.pick(req.body, ['Name','NationalId','Phone','DateOfBirth','Email','Position']))
         const time = new Date();
         employee.CreatedAt = time;
+        let randomCode = Math.floor(1000 + Math.random() * 9000);
         employee.Code = 'EMP'+randomCode.toString();
-        employee.Positon = req.body.Position
-
+        
         try {
             await employee.save()
             const token = employee.generateVerificationToken()
@@ -119,7 +92,7 @@ exports.registerEmployee = async(req, res) => {
             }
     
             if(process.env.NODE_ENV == 'production'){
-                var url = `https://ski-design-backend.herokuapp.com`
+                var url = `https://employee-management-sys-pacis.herokuapp.com`
             }
     
             const html = `<a href='${url}/employee/verification/${token}'>Employee Management System email Verification Link.</a>`;
@@ -131,6 +104,88 @@ exports.registerEmployee = async(req, res) => {
         } catch (ex) {
             res.status(400).send(ex.message);
         }
+    } catch (ex) {
+        res.status(500).send(ex.message);
+    }
+}
+
+exports.registerEmployeesByFileUpload = async(req, res) => {
+    try {
+        if(req.file == undefined){
+            return res.status(400).send("Please upload an excel file!");
+        }
+        readExcelFile(req.file.path)
+        .then(async(rows)=>{
+            var employees = []
+            var validationErrors = []
+            for(let i=0;i<rows.length;i++){
+                let employeeInfo = {
+                    Name: rows[i][0],
+                    NationalId: rows[i][1],
+                    Phone: rows[i][2],
+                    Email: rows[i][3],
+                    DateOfBirth:rows[i][4],
+                    Status: rows[i][5],
+                    Position: rows[i][6]
+                }
+                let recordNo = i+1;
+                let validation = await validateEmployeeRegistrationByFileUpload(employeeInfo,recordNo)
+                if(validation.type != 'success') {
+                    validationErrors.push(validation) 
+                } 
+                else{
+                    employees.push(employeeInfo)
+                }
+            }
+            if(validationErrors.length != 0){
+                return res.status(200).send({
+                    message:"Validation Failed",
+                    error: validationErrors
+                })    
+            }
+            else{
+                let employeesUploaded = []
+                for(let i=0;i<employees.length;i++){
+                    let employee = new Employee(_.pick(employees[i], ['Name','NationalId','Phone','DateOfBirth','Email','Position','Status']))
+                    const time = new Date();
+                    employee.CreatedAt = time;
+                    let randomCode = Math.floor(1000 + Math.random() * 9000);
+                    employee.Code = 'EMP'+randomCode.toString();
+                    
+                    try {
+                        await employee.save()
+                        const token = employee.generateVerificationToken()
+                        const role = req.body.Position
+                        const subject = `Employee Management System: You have been hired as ${role} for the EMPLOYEE MANAGEMENT SYSTEM. All you have to do is click the link below to verify your email.
+                        IF YOU DO NOT ACCEPT THIS OFFER, PLEASE IGNORE THE MESSAGE!`
+                        if(process.env.NODE_ENV == 'development'){
+                            let port = process.env.PORT
+                            var url = `http://localhost:${port}`
+                        }
+                
+                        if(process.env.NODE_ENV == 'production'){
+                            var url = `https://employee-management-sys-pacis.herokuapp.com`
+                        }
+                
+                        const html = `<a href='${url}/employee/verification/${token}'>Employee Management System email Verification Link.</a>`;
+                        sendEmail(employee.Email, subject, html) 
+                        employeesUploaded.push(employee)
+                    } catch (ex) {
+                        res.status(400).send(ex.message);
+                    }
+                }
+                return res.status(200).send({
+                    message:"Employees Registered Successfully",
+                    data: employeesUploaded
+                })
+            }
+        })
+        .catch(error=>{
+            return res.status(400).send({
+                message: "Failed to read the uploaded excel file!",
+                error:error.message
+            });
+        })
     } catch (ex) {
         res.status(500).send(ex.message);
     }

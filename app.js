@@ -14,6 +14,7 @@ require('./utils/production')(app)
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.static("ExcelSheets"))
 
 app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerJsdoc));
 app.use(require("./routes/user.routes"))

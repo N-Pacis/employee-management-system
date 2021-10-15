@@ -1,8 +1,11 @@
 const express = require("express")
 const router = express.Router()
-const {getEmployees, validateEmployeeByEmail, registerEmployee,updateEmployeeInformation, deleteEmployee, suspendEmployee, activateEmployee, searchEmployee} = require("../controllers/employee.controller")
+const {getEmployees, validateEmployeeByEmail, registerEmployee,updateEmployeeInformation, deleteEmployee, suspendEmployee, activateEmployee, searchEmployee, registerEmployeesByFileUpload} = require("../controllers/employee.controller")
 const authenticate = require('../middlewares/auth.middleware')
 const manager = require('../middlewares/manager.middleware')
+const {validateEmployee} = require("../validators/employee.validator")
+const { uploadFile } = require("../utils/uploadExcelSheet")
+const upload = uploadFile();
 
 /**
  * @swagger
@@ -159,7 +162,39 @@ router.get("/employee/verification/:token", validateEmployeeByEmail)
  *       500:
  *         description: Internal Server Error
  */
- router.post("/employee/register", authenticate,manager,registerEmployee)
+ router.post("/employee/register", authenticate,manager,validateEmployee,registerEmployee)
+
+ /**
+ * @swagger
+ * /employee/registerMultiple:
+ *   post:
+ *     tags: [EMPLOYEE MANAGEMENT MODULE]
+ *     description: Register multiple employees by uploading an excel sheet containing  Name, NationalId,Phone, Email, DateOfBirth, Status and Position
+ *     summary: Register multiple employees
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token of the manager
+ *         type: string
+ *         in: header
+ *         required: true
+ *       - name: ExcelFile
+ *         description: Excel sheet containing a list of employees
+ *         type: file
+ *         in: formData
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *       201:
+ *         description: Created
+ *       400:
+ *         description:Bad Request
+ *       404:
+ *         description:Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+  router.post("/employee/registerMultiple", [authenticate,manager,upload.single("ExcelFile")],registerEmployeesByFileUpload)
 
 /**
  * @swagger

@@ -1,8 +1,9 @@
-const { validateRegistration, validateLogin,validateSendResetLink,validatePasswordReset,validateUpdate,validatePasswordChange, User} = require("../models/user.model")
+const {  validateLogin,validateSendResetLink,validatePasswordReset,validateUpdate,validatePasswordChange, User} = require("../models/user.model")
 const _ = require("lodash")
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 const { sendEmail } = require("../utils/emailConfig.utils");
+const { validateManager } = require("../validators/manager.validator");
 
 exports.getUserInformation = async(req, res) => {
     try {
@@ -20,38 +21,11 @@ exports.getUserInformation = async(req, res) => {
 
 exports.createUser = async(req, res) => {
     try {
-        const { error } = validateRegistration(req.body)
-        if (error) return res.status(400).send(error.details[0].message)
-
-        let randomCode = Math.floor(1000 + Math.random() * 9000);
-
-        let checkEmail = await User.findOne({ Email: req.body.Email })
-        if (checkEmail) return res.status(400).send("Email is already registered!")
-
-        let checkNationalID = await User.findOne({ NationalId: req.body.NationalId })
-        if (checkNationalID) return res.status(400).send("National Id is already registered!")
-
-        let checkPhone = await User.findOne({ Phone: req.body.Phone })
-        if (checkPhone) return res.status(400).send("Phone Number is already registered!")
-        if((req.body.Phone).length < 10 ) return res.status(400).send("Phone Number must be 10 characters!")
-        req.body.Phone = (req.body.Phone).toString()
-        let validRwandanPhoneNumbers = ['078','079','072','073']
-        let first3Characters = (req.body.Phone.toString()).substring(0,3)
-        if(validRwandanPhoneNumbers.includes(first3Characters) != true){
-            return res.status(400).send("Phone Number must be a valid Rwandan Phone Number!")
-        }
-
-        if(req.body.DateOfBirth){
-            let date = new Date(req.body.DateOfBirth).getFullYear()
-            let today = new Date()
-            if((today.getFullYear() - date) < 18){
-                return res.status(400).send("You are not eligible to register because the provided age is less than 18 years")
-            }
-        }
-
+        validateManager(req.body)
         let user = new User(_.pick(req.body, ['Name','NationalId','Phone','DateOfBirth','Email','Password']))
         const time = new Date();
         user.CreatedAt = time;
+        let randomCode = Math.floor(1000 + Math.random() * 9000);
         user.Code = 'EMP'+randomCode.toString();
 
         const salt = await bcrypt.genSalt(10)
