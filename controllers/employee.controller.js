@@ -73,7 +73,6 @@ exports.getEmployees = async(req, res) => {
 
 exports.registerEmployee = async(req, res) => {
     try {
-
         let employee = new Employee(_.pick(req.body, ['Name','NationalId','Phone','DateOfBirth','Email','Position']))
         const time = new Date();
         employee.CreatedAt = time;

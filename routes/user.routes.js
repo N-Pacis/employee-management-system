@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const {getUserInformation, validateUserByEmail, createUser, login,sendResetLink,updateUserInformation, resetPassword,changePassword, deleteAccount} = require("../controllers/user.controller")
 const authenticate = require('../middlewares/auth.middleware')
+const { validateManager } = require("../validators/manager.validator")
 
 /**
  * @swagger
@@ -104,7 +105,7 @@ router.get("/verification/:token", validateUserByEmail)
  *       500:
  *         description: Internal Server Error
  */
- router.post("/register", createUser)
+ router.post("/register",validateManager, createUser)
 
 /**
  * @swagger
