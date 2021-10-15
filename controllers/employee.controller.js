@@ -335,6 +335,7 @@ exports.deleteEmployee = async (req, res) => {
         let employee = await Employee.findById(req.params.employeeId)
         if (!employee) return res.status(404).send("The employee with the provided employee ID does not exist")
         await Employee.findByIdAndRemove(req.params.employeeId)
+        let manager = await User.findById(req.user._id)
         await log(
             'delete-employee',
             {
