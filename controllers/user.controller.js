@@ -22,7 +22,6 @@ exports.getUserInformation = async(req, res) => {
 
 exports.createUser = async(req, res) => {
     try {
-        validateManager(req.body)
         let user = new User(_.pick(req.body, ['Name','NationalId','Phone','DateOfBirth','Email','Password']))
         const time = new Date();
         user.CreatedAt = time;
