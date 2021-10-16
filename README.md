@@ -2,8 +2,8 @@
 ### This is an employee management system that is developed as part of taking the Awesomity Backend Challenge. This project will allow managers to manage their employees easily and provides all the functionalities necessary for that to happen including registering employees, suspending employees, activating employees, registering multiple employees by uploading an excel sheet and system will automatically register the employees and also recording all actions performed by the manager inorder to support future audits and solving future problems.
 
 ## Installation
-`Clone The Repository`
-`Open the terminal and navigate to the directory where the cloned project is`
+`Clone The Repository<br>`
+`Open the terminal and navigate to the directory where the cloned project is<br>`
 `run npm install`
 `rename the file called ".env.example" to ".env"`
 `replace the "xxxxx" with the appropriate environment variables`
