@@ -6,13 +6,19 @@ This is an employee management system that is developed as part of taking the Aw
     
     - Open the terminal and navigate to the directory where the cloned project is located
     
-    - run "npm install"
+    - open your terminal and run "npm install"
     
     - rename the file called ".env.example" to ".env"
     
     - replace the "xxxxx" with the appropriate environment variables
     
-    - run npm start
+    - make sure the email user you write in the .env file has "less secure apps(gmail) enabled" and "displayUnlockCaptcha(google) disabled" which is required to set up the smtp server for sending emails
+    
+    - open your terminal and run "npm start"
+    
+    - open your browser and visit "localhost:4000/documentation"
+    
+    - "Hope you enjoy exploring the features of this system😉"
 
 ### Visit the [Employee Management System Swagger Documentation Hosted Online](https://employee-management-sys-pacis.herokuapp.com/documentation) In order to ease the process of installing and running the project locally you can simply visit the hosted project
 
