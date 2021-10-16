@@ -1,5 +1,5 @@
 # Employee-Management-System
-### This is an employee management system that is developed as part of taking the Awesomity Backend Challenge. This project will allow managers to manage their employees easily and provides all the functionalities necessary for that to happen including registering employees, suspending employees, activating employees, registering multiple employees by uploading an excel sheet and system will automatically register the employees and also recording all actions performed by the manager inorder to support future audits and solving future problems.
+This is an employee management system that is developed as part of taking the Awesomity Backend Challenge. This project will allow managers to manage their employees easily and provides all the functionalities necessary for that to happen including registering employees, suspending employees, activating employees, registering multiple employees by uploading an excel sheet and system will automatically register the employees and also recording all actions performed by the manager inorder to support future audits and solving future problems.
 
 ## Installation
     - Clone The Repository
