@@ -6,7 +6,7 @@ This is an employee management system that is developed as part of taking the Aw
     
     - Open the terminal and navigate to the directory where the cloned project is located
     
-    - run **npm install**
+    - run __npm install__
     
     - rename the file called ".env.example" to ".env"
     
