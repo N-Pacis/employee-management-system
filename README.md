@@ -3,11 +3,11 @@
 
 ## Installation
 `Clone The Repository`<br>
-`Open the terminal and navigate to the directory where the cloned project is`<br>
-`run npm install`
-`rename the file called ".env.example" to ".env"`
-`replace the "xxxxx" with the appropriate environment variables`
-`run npm start`
+`Open the terminal and navigate to the directory where the cloned project is located`<br>
+`run "npm install"`<br>
+`rename the file called ".env.example" to ".env"`<br>
+`replace the "xxxxx" with the appropriate environment variables`<br>
+`run npm start`<br>
 
 ### Visit the [Employee Management System Swagger Documentation Hosted Online](https://employee-management-sys-pacis.herokuapp.com/documentation) In order to ease the process of installing and running the project locally you can simply visit the hosted project
 
