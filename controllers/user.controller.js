@@ -42,7 +42,7 @@ exports.createUser = async(req, res) => {
             }
     
             if(process.env.NODE_ENV == 'production'){
-                var url = `https://ski-design-backend.herokuapp.com`
+                var url = `https://employee-management-sys-pacis.herokuapp.com`
             }
     
             const html = `<a href='${url}/verification/${token}'>Employee Management System email Verification Link.</a>`;
@@ -121,7 +121,7 @@ exports.sendResetLink = async(req, res) => {
         }
 
         if(process.env.NODE_ENV == 'production'){
-            var url = `https://ski-design-backend.herokuapp.com`
+            var url = `https://employee-management-sys-pacis.herokuapp.com`
         }
 
         let subject = "EMPLOYEE MANAGEMENT SYSTEM: Reset Your password by clicking the link below. If you have not requested this please ignore the message"
