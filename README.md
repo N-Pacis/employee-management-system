@@ -1,5 +1,5 @@
 # Employee-Management-System
-### This is an employee management system that is developed as part of taking the Awesomity Backend Challenge
+### This is an employee management system that is developed as part of taking the Awesomity Backend Challenge. This project will allow managers to manage their employees easily and provides all the functionalities necessary for that to happen including registering employees, suspending employees, activating employees, registering multiple employees by uploading an excel sheet and system will automatically register the employees and also recording all actions performed by the manager inorder to support future audits and solving future problems.
 
 ## Installation
 `Clone The Repository`
@@ -11,11 +11,11 @@
 
 ### Visit the [Employee Management System Swagger Documentation Hosted Online](https://employee-management-sys-pacis.herokuapp.com/documentation) In order to ease the process of installing and running the project locally you can simply visit the hosted project
 
-## Useful resources
+## Documentation
 
-- [Documentation and API](https://employee-management-sys-pacis.herokuapp.com/documentation)
+- [Swagger Api Documentation Link](https://employee-management-sys-pacis.herokuapp.com/documentation)
 
-## Developed By NKUBITO Pacis
+## Developed By 💻NKUBITO Pacis👨‍💻
 <div align="center">
     <a href="https://php.net">
         <img
