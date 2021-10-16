@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { User} = require("../models/user.model")
 
-exports.validateManager = async(manager)=>{
+exports.validateManager = async(req,res,next)=>{
 
     const schema = Joi.object({
         Name: Joi.string().min(5).required(),
