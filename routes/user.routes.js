@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const {getUserInformation, validateUserByEmail, createUser, login,sendResetLink,updateUserInformation, resetPassword,changePassword, deleteAccount} = require("../controllers/user.controller")
+const {getUserInformation, validateUserByEmail, createUser, login,sendResetLink,updateUserInformation, resetPassword, resetPasswordLink,changePassword, deleteAccount} = require("../controllers/user.controller")
 const authenticate = require('../middlewares/auth.middleware')
 const { validateManager } = require("../validators/manager.validator")
 
@@ -196,6 +196,8 @@ router.post("/sendResetLink",sendResetLink)
  *         description: Internal Server Error
  */
 router.patch("/resetPassword/:userId/:token",resetPassword)
+
+router.get("/resetPassword",resetPasswordLink)
 
 /**
  * @swagger

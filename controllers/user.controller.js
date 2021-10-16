@@ -3,7 +3,6 @@ const _ = require("lodash")
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 const { sendEmail } = require("../utils/emailConfig.utils");
-const { validateManager } = require("../validators/manager.validator");
 const { log } = require("../utils/log.utils");
 
 exports.getUserInformation = async(req, res) => {
@@ -15,6 +14,16 @@ exports.getUserInformation = async(req, res) => {
             message: "ok",
             data: user
         })
+    } catch (ex) {
+        res.status(400).send(ex.message)
+    }
+}
+
+exports.resetPasswordLink = async(req, res) => {
+    try {
+        let token = req.query.t;
+        if(!token || token == "") return res.status(404).send("Invalid URL!")
+        return res.status(200).send(`Please copy this token as it'll be used when resetting your password: ${token}`)
     } catch (ex) {
         res.status(400).send(ex.message)
     }
