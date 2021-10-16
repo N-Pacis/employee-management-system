@@ -87,14 +87,7 @@ exports.registerEmployee = async (req, res) => {
             const role = req.body.Position
             const subject = `Employee Management System: You have been hired as ${role} for the EMPLOYEE MANAGEMENT SYSTEM. All you have to do is click the link below to verify your email.
             IF YOU DO NOT ACCEPT THIS OFFER, PLEASE IGNORE THE MESSAGE!`
-            if (process.env.NODE_ENV == 'development') {
-                let port = process.env.PORT
-                var url = `http://localhost:${port}`
-            }
-
-            if (process.env.NODE_ENV == 'production') {
                 var url = `https://employee-management-sys-pacis.herokuapp.com`
-            }
 
             const html = `<a href='${url}/employee/verification/${token}'>Employee Management System email Verification Link.</a>`;
             sendEmail(employee.Email, subject, html)
@@ -172,14 +165,8 @@ exports.registerEmployeesByFileUpload = async (req, res) => {
                             const role = req.body.Position
                             const subject = `Employee Management System: You have been hired as ${role} for the EMPLOYEE MANAGEMENT SYSTEM. All you have to do is click the link below to verify your email.
                         IF YOU DO NOT ACCEPT THIS OFFER, PLEASE IGNORE THE MESSAGE!`
-                            if (process.env.NODE_ENV == 'development') {
-                                let port = process.env.PORT
-                                var url = `http://localhost:${port}`
-                            }
 
-                            if (process.env.NODE_ENV == 'production') {
                                 var url = `https://employee-management-sys-pacis.herokuapp.com`
-                            }
 
                             const html = `<a href='${url}/employee/verification/${token}'>Employee Management System email Verification Link.</a>`;
                             sendEmail(employee.Email, subject, html)

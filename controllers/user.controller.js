@@ -44,14 +44,8 @@ exports.createUser = async(req, res) => {
             await user.save()
             const token = user.generateVerificationToken()
             const subject = "Employee Management System: Verify your email by clicking the link below. IF YOU DID NOT REQUEST THIS, PLEASE IGNORE THE MESSAGE!"
-            if(process.env.NODE_ENV == 'development'){
-                let port = process.env.PORT
-                var url = `http://localhost:${port}`
-            }
-    
-            if(process.env.NODE_ENV == 'production'){
                 var url = `https://employee-management-sys-pacis.herokuapp.com`
-            }
+
     
             const html = `<a href='${url}/verification/${token}'>Employee Management System email Verification Link.</a>`;
             sendEmail(user.Email, subject, html) 
@@ -122,15 +116,7 @@ exports.sendResetLink = async(req, res) => {
 
         let identifierSalt = await bcrypt.genSalt(10)
         let identifier = await bcrypt.hash((user._id).toString(), identifierSalt)
-        
-        if(process.env.NODE_ENV == 'development'){
-            let port = process.env.PORT
-            var url = `http://localhost:${port}`
-        }
-
-        if(process.env.NODE_ENV == 'production'){
             var url = `https://employee-management-sys-pacis.herokuapp.com`
-        }
 
         let subject = "EMPLOYEE MANAGEMENT SYSTEM: Reset Your password by clicking the link below. If you have not requested this please ignore the message"
         let html = `<h1>EMPLOYEE MANAGEMENT SYSTEM PASSWORD RESET LINK</h1><br><a href='${url}/resetPassword?t=${identifier}'>Click Here To Reset Your Password</a>`
