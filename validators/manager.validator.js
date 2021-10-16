@@ -27,7 +27,7 @@ exports.validateManager = async(req,res,next)=>{
     
     let checkPhone = await User.findOne({ Phone: req.body.Phone })
     if (checkPhone) return res.status(400).send("Phone Number is already registered!")
-    if((req.body.Phone).length < 10 ) return res.status(400).send("Phone Number must be 10 characters!")
+    if((req.body.Phone).length < 10 || (req.body.Phone).length > 10) return res.status(400).send("Phone Number must be 10 characters!")
     req.body.Phone = (req.body.Phone).toString()
     let validRwandanPhoneNumbers = ['078','079','072','073']
     let first3Characters = (req.body.Phone.toString()).substring(0,3)
