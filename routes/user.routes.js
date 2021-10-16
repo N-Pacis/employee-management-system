@@ -78,7 +78,7 @@ router.get("/verification/:token", validateUserByEmail)
  *         in: formData
  *         required: true
  *       - name: DateOfBirth
- *         description: Date of birth of the user Format=> dd-mm-yyy
+ *         description: Date of birth of the user Format=> mm-dd-yyy
  *         type: string
  *         in: formData
  *         example: 01-01-2000

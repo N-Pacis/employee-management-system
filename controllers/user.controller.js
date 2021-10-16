@@ -140,6 +140,7 @@ exports.sendResetLink = async(req, res) => {
         res.status(200).send({
             message:`Sent the verification link to ${user.Email}`,
             data:{
+                message: "Copy this userId as it'll be used in the next step of resetting password",
                 userId:(user._id).toString(),
             }
         })

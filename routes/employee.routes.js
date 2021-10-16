@@ -134,7 +134,7 @@ router.get("/employee/verification/:token", validateEmployeeByEmail)
  *         in: formData
  *         required: true
  *       - name: DateOfBirth
- *         description: Date of birth of the employee Format=> dd-mm-yyy
+ *         description: Date of birth of the employee Format=> mm-dd-yyy
  *         type: string
  *         in: formData
  *         example: 01-01-2000
