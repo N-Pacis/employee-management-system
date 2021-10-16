@@ -3,6 +3,9 @@
 
 ## Installation
 `Clone The Repository`<br>
+ 
+    make TEST_PHP_ARGS=-j4 test
+
 `Open the terminal and navigate to the directory where the cloned project is located`<br>
 `run "npm install"`<br>
 `rename the file called ".env.example" to ".env"`<br>
