@@ -42,4 +42,5 @@ exports.validateManager = async(req,res,next)=>{
             return res.status(400).send("You are not eligible to register because the provided age is less than 18 years")
         }
     }
+    return next()
 }
