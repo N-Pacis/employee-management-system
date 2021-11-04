@@ -24,3 +24,5 @@ app.use(require("./routes/system.routes"))
 app.listen(process.env.PORT || PORT ,()=>{
     console.log(`Server is listening on port ${PORT}`);
 })
+
+module.exports = app
