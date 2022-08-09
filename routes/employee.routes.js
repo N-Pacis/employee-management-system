@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const {getEmployees, validateEmployeeByEmail, registerEmployee,updateEmployeeInformation, deleteEmployee, suspendEmployee, activateEmployee, searchEmployee, registerEmployeesByFileUpload} = require("../controllers/employee.controller")
+const {getEmployees, validateEmployeeByEmail, registerEmployee,updateEmployeeInformation, deleteEmployee, suspendEmployee, activateEmployee, searchEmployee, registerEmployeesByFileUpload, downloadEmployeesCsv, getEmployeesStatistics, getEmployeesGraphStatistics} = require("../controllers/employee.controller")
 const authenticate = require('../middlewares/auth.middleware')
 const manager = require('../middlewares/manager.middleware')
 const {validateEmployee} = require("../validators/employee.validator")
@@ -31,6 +31,79 @@ const upload = uploadFile();
  *         description: Internal Server Error
  */
  router.get("/employees",authenticate,manager,getEmployees)
+
+ 
+/**
+ * @swagger
+ * /employees/statistics:
+ *   get:
+ *     tags: [EMPLOYEE MANAGEMENT MODULE]
+ *     description: Get Employees statistics  
+ *     parameters: 
+ *       - name: Authorization
+ *         description: JWT token of the manager
+ *         type: string
+ *         in: header
+ *         required: true
+ *     responses:
+ *       200:
+ *         description:Success
+ *       400:
+ *         description:Bad Request
+ *       404:
+ *         description:Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+ router.get("/employees/statistics",authenticate,manager,getEmployeesStatistics)
+
+ /**
+ * @swagger
+ * /employees/graph-statistics:
+ *   get:
+ *     tags: [EMPLOYEE MANAGEMENT MODULE]
+ *     description: Get Employees graph statistics  
+ *     parameters: 
+ *       - name: Authorization
+ *         description: JWT token of the manager
+ *         type: string
+ *         in: header
+ *         required: true
+ *     responses:
+ *       200:
+ *         description:Success
+ *       400:
+ *         description:Bad Request
+ *       404:
+ *         description:Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+  router.get("/employees/graph-statistics",authenticate,manager,getEmployeesGraphStatistics)
+
+ /**
+ * @swagger
+ * /employees/download-csv:
+ *   get:
+ *     tags: [EMPLOYEE MANAGEMENT MODULE]
+ *     description: Download employees csv
+ *     parameters: 
+ *       - name: Authorization
+ *         description: JWT token of the manager
+ *         type: string
+ *         in: header
+ *         required: true
+ *     responses:
+ *       200:
+ *         description:Success
+ *       400:
+ *         description:Bad Request
+ *       404:
+ *         description:Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+  router.get("/employees/download-csv",authenticate,manager,downloadEmployeesCsv)
 
 /**
  * @swagger
