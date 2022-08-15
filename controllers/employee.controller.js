@@ -6,6 +6,7 @@ const readExcelFile = require('read-excel-file/node')
 const { validateEmployeeRegistrationByFileUpload } = require('../validators/employee.validator');
 const { User } = require("../models/user.model");
 const { log } = require("../utils/log.utils");
+const Json2CsvParser = require("json2csv").Parser;
 
 
 exports.getAnEmployee = async (req, res) => {
@@ -337,6 +338,89 @@ exports.deleteEmployee = async (req, res) => {
         )
         res.status(200).send("Employee deleted successfully")
     } catch (ex) {
+        res.status(400).send(ex.message)
+    }
+}
+
+
+exports.downloadEmployeesCsv = async(req,res)=>{
+    try{
+        let employees = await Employee.find().select()
+        let csv = "Code,Names,NationalId,Phone,Email,Date of birth, Status, Position\r\n"
+
+        employees.forEach(employee => {
+            var dateFormat = new Date(employee.DateOfBirth)
+            var dob = dateFormat.getDate() + "-" + (dateFormat.getMonth() + 1) + "-"+dateFormat.getFullYear()
+            csv = csv.concat(employee.Code + "," + employee.Name +","+employee.NationalId+","+employee.Phone+","+employee.Email+","+dob+","+employee.Status+","+employee.Position+"\r\n")
+        });
+
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader("Content-Disposition", "attachment; filename=Employees.csv");    
+
+        res.status(200).end(csv);
+    }
+    catch(ex){
+        res.status(400).send(ex.message)
+    }
+}
+
+exports.getEmployeesStatistics = async(req,res)=>{
+    try{
+        let statistics = {
+            totalEmployees: 0,
+            activeEmployees: 0,
+            deactivatedEmployees: 0,
+            developers: 0,
+            designers: 0,
+            testers: 0,
+            devops: 0
+        }
+        statistics.totalEmployees = await Employee.find().count()
+        statistics.activeEmployees = await Employee.find({Status: 'ACTIVE'}).count()
+        statistics.deactivatedEmployees = await Employee.find({Status: 'INACTIVE'}).count()
+        statistics.developers = await Employee.find({Position:'DEVELOPER'}).count()
+        statistics.designers = await Employee.find({Position:'DESIGNER'}).count()
+        statistics.testers = await Employee.find({Position:'TESTER'}).count()
+        statistics.devops = await Employee.find({Position:'DEVOPS'}).count()
+
+        return res.status(200).send({
+            message: 'Employees statistics by numbers',
+            data: statistics
+        })
+    }
+    catch(ex){
+        res.status(400).send(ex.message)
+    }
+}
+
+exports.getEmployeesGraphStatistics = async(req,res)=>{
+    try{
+        let months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        let today = new Date()
+        let lastYear = new Date(today.getFullYear(), (today.getMonth() - 12) + 1, today.getDate())
+
+        let statistics = []
+        for(let i=0;i<12;i++){
+            const fromDate = new Date(lastYear.getFullYear(),lastYear.getMonth()+i,1)
+            const toDate = new Date(fromDate.getFullYear(),fromDate.getMonth()+1,0)
+
+            let employees_in_given_month = await Employee.find({
+                CreatedAt: {$gte:fromDate,$lte:toDate}
+            }).count()
+
+            statistics.push({
+                month: months[fromDate.getMonth()],
+                number: employees_in_given_month
+            })
+        }
+
+        return res.status(200).send({
+            message: "Graph statistics",
+            data: statistics
+        })
+
+    }
+    catch(ex){
         res.status(400).send(ex.message)
     }
 }
