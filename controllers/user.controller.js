@@ -48,16 +48,20 @@ exports.createUser = async(req, res) => {
 
     
             const html = `<a href='${url}/verification/${token}'>Employee Management System email Verification Link.</a>`;
-            sendEmail(user.Email, subject, html) 
+            // sendEmail(user.Email, subject, html) 
             res.send({
                 status: 201,
-                message: "Check your mail for email verification. If you don't find it in inbox, Check your spam"
+                message: "Account created! You can now login."
             })
         } catch (ex) {
-            res.status(400).send(ex.message);
+            res.status(400).send({
+                message: ex.message
+            });
         }
     } catch (ex) {
-        res.status(500).send(ex.message);
+        res.status(500).send({
+            message: ex.message
+        });
     }
 }
 
@@ -99,7 +103,7 @@ exports.login = async(req, res) => {
         res.header('Authorization', token).send({
             status: 200,
             message: "Login Successful",
-            data: user
+            access_token: token
         })
     } catch (ex) {
         res.status(400).send(ex.message)
