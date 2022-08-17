@@ -105,7 +105,7 @@ const userSchema = new mongoose.Schema({
     },
     isVerified:{
         type: Boolean,
-        default: false
+        default: true
     },
     CreatedAt:{
         type:Date,
@@ -114,12 +114,10 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.methods.generateAuthToken = function(){
-    const token = jwt.sign(
+    return jwt.sign(
         {_id:this._id,email:this.Email,Position: this.Position},
         process.env.JWT
     )
-    const finalToken = 'Bearer '+token
-    return finalToken
 }
 userSchema.methods.generateVerificationToken = function(){
     const token = jwt.sign(
